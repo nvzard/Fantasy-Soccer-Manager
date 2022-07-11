@@ -6,8 +6,9 @@ import (
 
 	ginzap "github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
+	"github.com/nvzard/soccer-manager/controller"
+	"github.com/nvzard/soccer-manager/middleware"
 	"github.com/nvzard/soccer-manager/utils"
-	// "go.uber.org/zap"
 )
 
 // var logger *zap.SugaredLogger
@@ -25,9 +26,22 @@ func SetupApiServer() *gin.Engine {
 	r.Use(ginzap.Ginzap(utils.Logger(), time.RFC3339, true))
 	r.Use(ginzap.RecoveryWithZap(utils.Logger(), true))
 
+	api := r.Group("/api")
+	{
+		api.POST("/auth", controller.GenerateToken)
+		api.POST("/user", controller.RegisterUser)
+	}
+
+	secured := r.Group("/secured").Use(middleware.Auth())
+	{
+		secured.GET("/ping", controller.Ping)
+	}
+
 	// Root Routes
 	r.GET("/", root)
 	r.GET("/health", healthcheck)
+	// r.POST("/token", controller.GenerateToken)
+	// r.POST("/user/register", controller.RegisterUser)
 
 	return r
 }
