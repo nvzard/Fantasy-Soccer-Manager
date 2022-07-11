@@ -19,31 +19,31 @@ func init() {
 
 // SetupApiServer attached routes and middleware and starts the server
 func SetupApiServer() *gin.Engine {
-	r := gin.New()
+	router := gin.New()
 
 	// Middleware
-	r.Use(gin.Recovery())
-	r.Use(ginzap.Ginzap(utils.Logger(), time.RFC3339, true))
-	r.Use(ginzap.RecoveryWithZap(utils.Logger(), true))
+	router.Use(gin.Recovery())
+	router.Use(ginzap.Ginzap(utils.Logger(), time.RFC3339, true))
+	router.Use(ginzap.RecoveryWithZap(utils.Logger(), true))
 
-	api := r.Group("/api")
+	// Root Routes
+	router.GET("/", root)
+	router.GET("/health", healthcheck)
+
+	// Public Routes: Create User and Login
+	api := router.Group("/api")
 	{
-		api.POST("/auth", controller.GenerateToken)
 		api.POST("/user", controller.RegisterUser)
+		api.POST("/login", controller.GenerateToken)
 	}
 
-	secured := r.Group("/secured").Use(middleware.Auth())
+	// Secure Routes: Require JWT Token in Header
+	secured := router.Group("/api").Use(middleware.Auth())
 	{
 		secured.GET("/ping", controller.Ping)
 	}
 
-	// Root Routes
-	r.GET("/", root)
-	r.GET("/health", healthcheck)
-	// r.POST("/token", controller.GenerateToken)
-	// r.POST("/user/register", controller.RegisterUser)
-
-	return r
+	return router
 }
 
 func root(c *gin.Context) {
