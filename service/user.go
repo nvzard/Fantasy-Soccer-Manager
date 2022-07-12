@@ -1,6 +1,9 @@
 package service
 
 import (
+	"errors"
+	"strings"
+
 	"github.com/nvzard/soccer-manager/database"
 	"github.com/nvzard/soccer-manager/model"
 	"github.com/nvzard/soccer-manager/utils"
@@ -19,6 +22,10 @@ func CreateUser(user model.User) (model.User, error) {
 		user.CreateTeam()
 		result := tx.Create(&user)
 		if err := result.Error; err != nil {
+			if strings.Contains(err.Error(), model.UniqueConstraintEmail) {
+				return errors.New("user with this email already exists")
+			}
+
 			logger.Errorw("Failed to create user", "error", err, "user", user)
 			return err
 		}
@@ -39,4 +46,14 @@ func CreateUser(user model.User) (model.User, error) {
 	}
 
 	return user, err
+}
+
+func GetUser(email string) (model.User, error) {
+	var user model.User
+
+	if err := database.DB.First(&user, "email = ?", email).Error; err != nil {
+		return user, err
+	}
+
+	return user, nil
 }
