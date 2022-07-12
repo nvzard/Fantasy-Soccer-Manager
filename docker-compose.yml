@@ -24,8 +24,21 @@ services:
       - db-data-sync:/var/lib/postgresql/data
     env_file:
       - config/env/development.env
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   container_name: pgadmin
+  #   ports:
+  #     - 3005:80
+  #   env_file:
+  #     - config/env/development.env
+  #   environment:
+  #     - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+  #     - PGADMIN_DEFAULT_PASSWORD=admin
+  #   volumes:
+  #     - pgadmin:/var/lib/pgadmin
+
 volumes:
-  grafana:
+  # pgadmin:
   code-sync:
     external: true
   db-data-sync: {}
