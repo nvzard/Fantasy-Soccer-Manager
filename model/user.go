@@ -15,6 +15,10 @@ type User struct {
 	TeamID    uint `json:"team_id"`
 }
 
+const (
+	UniqueConstraintEmail = "users_email_key"
+)
+
 func (user *User) HashPassword(password string) error {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
 	if err != nil {
