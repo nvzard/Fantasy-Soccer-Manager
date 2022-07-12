@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/nvzard/soccer-manager/database"
 	"github.com/nvzard/soccer-manager/model"
+	"github.com/nvzard/soccer-manager/service"
 )
 
 func RegisterUser(context *gin.Context) {
@@ -20,9 +20,12 @@ func RegisterUser(context *gin.Context) {
 		context.Abort()
 		return
 	}
-	record := database.DB.Create(&user)
-	if record.Error != nil {
-		context.JSON(http.StatusInternalServerError, gin.H{"error": record.Error.Error()})
+
+	user, err := service.CreateUser(user)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
 		context.Abort()
 		return
 	}

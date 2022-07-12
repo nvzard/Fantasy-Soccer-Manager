@@ -50,12 +50,32 @@ func drop() error {
 		return err
 	}
 
+	err = DB.Migrator().DropTable(&model.Team{})
+	if err != nil {
+		return err
+	}
+
+	err = DB.Migrator().DropTable(&model.Player{})
+	if err != nil {
+		return err
+	}
+
 	zap.S().Info("Dropped tables successfully")
 	return nil
 }
 
 func migrate() error {
 	err := DB.AutoMigrate(&model.User{})
+	if err != nil {
+		return err
+	}
+
+	err = DB.AutoMigrate(&model.Team{})
+	if err != nil {
+		return err
+	}
+
+	err = DB.AutoMigrate(&model.Player{})
 	if err != nil {
 		return err
 	}
