@@ -60,6 +60,11 @@ func drop() error {
 		return err
 	}
 
+	err = DB.Migrator().DropTable(&model.Transfer{})
+	if err != nil {
+		return err
+	}
+
 	zap.S().Info("Dropped tables successfully")
 	return nil
 }
@@ -76,6 +81,11 @@ func migrate() error {
 	}
 
 	err = DB.AutoMigrate(&model.Player{})
+	if err != nil {
+		return err
+	}
+
+	err = DB.AutoMigrate(&model.Transfer{})
 	if err != nil {
 		return err
 	}

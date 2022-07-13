@@ -1,6 +1,7 @@
 package model
 
 import (
+	"math/rand"
 	"time"
 
 	constants "github.com/nvzard/soccer-manager/helpers"
@@ -31,6 +32,18 @@ func (player *Player) GeneratePlayer(position string) {
 	player.Country = constants.GetRandomCountry()
 	player.Age = constants.GetRandomAge()
 	player.Position = position
+}
+
+func (player *Player) TransferPlayer(teamID uint) {
+	player.TeamID = teamID
+	player.increaseMarketValue()
+}
+
+// Randomly increase player market value b/w 10 and 100 percent
+func (player *Player) increaseMarketValue() {
+	rand.Seed(time.Now().UnixNano())
+	increasePercentage := 10 + rand.Intn(100-10)
+	player.MarketValue += player.MarketValue * (increasePercentage / 100)
 }
 
 func GeneratePlayers(goalkeeperCount, defendersCount, midfieldersCount, attackersCount int) []Player {
