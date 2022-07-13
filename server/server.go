@@ -51,7 +51,7 @@ func SetupApiServer() *gin.Engine {
 
 		secured.POST("/transfers/", controller.CreateTransfer)
 		// secured.POST("/transfers/buy/:player_id", controller.BuyPlayer)
-		// secured.GET("/transfers", controller.GetTransfers)
+		secured.GET("/transfers", controller.GetTransfers)
 	}
 
 	return router
