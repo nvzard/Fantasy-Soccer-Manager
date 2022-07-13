@@ -13,7 +13,7 @@ type Transfer struct {
 	Transferred bool      `json:"-" gorm:"default:false"`
 	CreatedAt   time.Time `json:"-"`
 	UpdatedAt   time.Time `json:"-"`
-	Player      Player    `json:"-"`
+	Player      Player    `json:"player"`
 }
 
 type TransferRequest struct {

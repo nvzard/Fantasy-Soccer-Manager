@@ -57,25 +57,18 @@ func CreateTransfer(context *gin.Context) {
 		context.Abort()
 		return
 	}
-	context.JSON(http.StatusCreated, gin.H{"transfer": transfer})
+	context.JSON(http.StatusCreated, gin.H{"transfer_id": transfer.ID})
 }
 
-// func GetUser(context *gin.Context) {
-// 	userEmail := context.Params.ByName("email")
+func GetTransfers(context *gin.Context) {
+	transfers, err := service.GetAllPendingTransfers()
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		context.Abort()
+		return
+	}
 
-// 	user, err := service.GetUser(userEmail)
-
-// 	if err != nil {
-// 		context.JSON(http.StatusNotFound, gin.H{"error": "user does not exist"})
-// 		context.Abort()
-// 		return
-// 	}
-
-// 	context.JSON(http.StatusCreated, gin.H{
-// 		"id":         user.ID,
-// 		"email":      user.Email,
-// 		"first_name": user.FirstName,
-// 		"last_name":  user.LastName,
-// 		"team_id":    user.TeamID,
-// 	})
-// }
+	context.JSON(http.StatusOK, gin.H{
+		"transfer_list": transfers,
+	})
+}

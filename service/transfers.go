@@ -39,3 +39,13 @@ func GetTransferByPlayerID(playerID string) (model.Transfer, error) {
 
 	return transfer, nil
 }
+
+func GetAllPendingTransfers() ([]model.Transfer, error) {
+	var transfers []model.Transfer
+
+	if err := database.DB.Preload("Player").Find(&transfers, "transferred = ?", false).Error; err != nil {
+		return transfers, err
+	}
+
+	return transfers, nil
+}
