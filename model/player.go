@@ -1,19 +1,22 @@
 package model
 
 import (
+	"time"
+
 	constants "github.com/nvzard/soccer-manager/helpers"
-	"gorm.io/gorm"
 )
 
 type Player struct {
-	gorm.Model
-	FirstName   string `json:"first_name"`
-	LastName    string `json:"last_name"`
-	Country     string `json:"country"`
-	Age         uint8  `json:"age"`
-	Position    string `json:"position"`
-	MarketValue int    `json:"marketValue" gorm:"default:1000000"`
-	TeamID      uint   `json:"-"`
+	ID          uint      `json:"id" gorm:"primarykey"`
+	FirstName   string    `json:"first_name"`
+	LastName    string    `json:"last_name"`
+	Country     string    `json:"country"`
+	Age         uint8     `json:"age"`
+	Position    string    `json:"position"`
+	MarketValue int       `json:"marketValue" gorm:"default:1000000"`
+	TeamID      uint      `json:"-"`
+	CreatedAt   time.Time `json:"-"`
+	UpdatedAt   time.Time `json:"-"`
 }
 
 func (player *Player) GeneratePlayer(position string) {
