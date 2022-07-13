@@ -44,7 +44,7 @@ func SetupApiServer() *gin.Engine {
 		secured.GET("/user/:email", controller.GetUser)
 
 		secured.GET("/team/:id", controller.GetTeam)
-		// secured.PATCH("/team/:id", controller.UpdateTeam)
+		secured.PATCH("/team/:id", controller.UpdateTeam)
 
 		secured.GET("/player/:id", controller.GetPlayer)
 		secured.PATCH("/player/:id", controller.UpdatePlayer)
