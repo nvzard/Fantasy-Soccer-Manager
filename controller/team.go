@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/nvzard/soccer-manager/auth"
 	"github.com/nvzard/soccer-manager/model"
 	"github.com/nvzard/soccer-manager/service"
 )
@@ -35,6 +36,13 @@ func UpdateTeam(context *gin.Context) {
 
 	if err != nil {
 		context.JSON(http.StatusNotFound, gin.H{"error": "team does not exist"})
+		context.Abort()
+		return
+	}
+
+	userAuth, exists := auth.GetUserAuth(context)
+	if !exists || userAuth.TeamID != team.ID {
+		context.JSON(http.StatusUnauthorized, gin.H{"error": "you are not authorized to update this team"})
 		context.Abort()
 		return
 	}
