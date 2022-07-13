@@ -17,6 +17,11 @@ type Team struct {
 	UpdatedAt     time.Time `json:"-"`
 }
 
+type TeamPatch struct {
+	Name    string `json:"name"`
+	Country string `json:"country"`
+}
+
 func (team *Team) GenerateTeam() {
 	team.Name = constants.GetRandomTeamName()
 	team.Country = constants.GetRandomCountry()
