@@ -43,11 +43,11 @@ func SetupApiServer() *gin.Engine {
 		secured.GET("/ping", controller.Ping)
 		secured.GET("/user/:email", controller.GetUser)
 
-		secured.GET("/teams/:id", controller.GetTeam)
-		// secured.PATCH("/teams/:id", controller.UpdateTeam)
+		secured.GET("/team/:id", controller.GetTeam)
+		// secured.PATCH("/team/:id", controller.UpdateTeam)
 
-		// secured.GET("/players/:id", controller.GetPlayer)
-		// secured.PATCH("/players/:id", controller.UpdatePlayer)
+		secured.GET("/player/:id", controller.GetPlayer)
+		secured.PATCH("/player/:id", controller.UpdatePlayer)
 	}
 
 	return router
