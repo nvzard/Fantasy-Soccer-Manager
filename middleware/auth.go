@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/nvzard/soccer-manager/auth"
+	"github.com/nvzard/soccer-manager/model"
 )
 
 func Auth() gin.HandlerFunc {
@@ -15,12 +16,18 @@ func Auth() gin.HandlerFunc {
 			context.Abort()
 			return
 		}
-		err := auth.ValidateToken(tokenString)
+		claims, err := auth.ValidateToken(tokenString)
 		if err != nil {
 			context.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 			context.Abort()
 			return
 		}
+
+		context.Set("user", model.UserAuth{
+			ID:     claims.ID,
+			Email:  claims.Email,
+			TeamID: claims.TeamID,
+		})
 		context.Next()
 	}
 }
