@@ -4,21 +4,27 @@ import (
 	"errors"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
+	"github.com/nvzard/soccer-manager/model"
 )
 
 var jwtKey = []byte("supersecretkey")
 
 type JWTClaim struct {
-	Email string `json:"email"`
+	ID     uint   `json:"id"`
+	Email  string `json:"email"`
+	TeamID uint   `json:"team_id"`
 	jwt.StandardClaims
 }
 
-func GenerateJWT(email string) (tokenString string, err error) {
+func GenerateJWT(user model.User) (tokenString string, err error) {
 	// Token Expires after 1 hour
 	expirationTime := time.Now().Add(1 * time.Hour)
 	claims := &JWTClaim{
-		Email: email,
+		ID:     user.ID,
+		Email:  user.Email,
+		TeamID: user.TeamID,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
 		},
@@ -28,7 +34,7 @@ func GenerateJWT(email string) (tokenString string, err error) {
 	return
 }
 
-func ValidateToken(signedToken string) (err error) {
+func ValidateToken(signedToken string) (*JWTClaim, error) {
 	token, err := jwt.ParseWithClaims(
 		signedToken,
 		&JWTClaim{},
@@ -37,16 +43,21 @@ func ValidateToken(signedToken string) (err error) {
 		},
 	)
 	if err != nil {
-		return
+		return nil, err
 	}
 	claims, ok := token.Claims.(*JWTClaim)
 	if !ok {
 		err = errors.New("couldn't parse claims")
-		return
+		return nil, err
 	}
 	if claims.ExpiresAt < time.Now().Local().Unix() {
 		err = errors.New("token expired")
-		return
+		return nil, err
 	}
-	return
+	return claims, nil
+}
+
+func GetUserAuth(context *gin.Context) (model.UserAuth, bool) {
+	userAuth, exists := context.Get("user")
+	return userAuth.(model.UserAuth), exists
 }

@@ -20,6 +20,12 @@ type User struct {
 	UpdatedAt time.Time `json:"-"`
 }
 
+type UserAuth struct {
+	ID     uint
+	TeamID uint
+	Email  string
+}
+
 const (
 	UniqueConstraintEmail = "users_email_key"
 )
