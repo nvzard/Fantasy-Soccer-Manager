@@ -34,13 +34,20 @@ func SetupApiServer() *gin.Engine {
 	api := router.Group("/api")
 	{
 		api.POST("/user", controller.RegisterUser)
-		api.POST("/login", controller.GenerateToken)
+		api.POST("/auth", controller.GenerateToken)
 	}
 
 	// Secure Routes: Require JWT Token in Header
 	secured := router.Group("/api").Use(middleware.Auth())
 	{
 		secured.GET("/ping", controller.Ping)
+		secured.GET("/user/:email", controller.GetUser)
+
+		secured.GET("/teams/:id", controller.GetTeam)
+		// secured.PATCH("/teams/:id", controller.UpdateTeam)
+
+		// secured.GET("/players/:id", controller.GetPlayer)
+		// secured.PATCH("/players/:id", controller.UpdatePlayer)
 	}
 
 	return router
