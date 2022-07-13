@@ -19,6 +19,12 @@ type Player struct {
 	UpdatedAt   time.Time `json:"-"`
 }
 
+type PlayerPatch struct {
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	Country   string `json:"country"`
+}
+
 func (player *Player) GeneratePlayer(position string) {
 	player.FirstName = constants.GetRandomFirstName()
 	player.LastName = constants.GetRandomLastName()
