@@ -8,8 +8,8 @@ import (
 type Transfer struct {
 	ID          uint      `json:"id" gorm:"primarykey"`
 	PlayerID    uint      `json:"player_id"`
-	MarketValue int       `json:"market_value"`
-	AskedPrice  int       `json:"asked_price"`
+	MarketValue int64     `json:"market_value"`
+	AskedPrice  int64     `json:"asked_price"`
 	Transferred bool      `json:"-" gorm:"default:false"`
 	CreatedAt   time.Time `json:"-"`
 	UpdatedAt   time.Time `json:"-"`
@@ -17,8 +17,8 @@ type Transfer struct {
 }
 
 type TransferRequest struct {
-	PlayerID   uint `json:"player_id"`
-	AskedPrice int  `json:"asked_price"`
+	PlayerID   uint  `json:"player_id"`
+	AskedPrice int64 `json:"asked_price"`
 }
 
 func (transferRequest *TransferRequest) Validate() error {

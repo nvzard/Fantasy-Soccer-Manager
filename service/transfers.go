@@ -1,6 +1,8 @@
 package service
 
 import (
+	"strconv"
+
 	"github.com/nvzard/soccer-manager/database"
 	"github.com/nvzard/soccer-manager/model"
 	"gorm.io/gorm"
@@ -28,6 +30,62 @@ func CreateTransfer(transferRequest model.TransferRequest, player model.Player) 
 	}
 
 	return newTransfer, err
+}
+
+func TransferPlayer(player model.Player, transfer model.Transfer, buyingTeamID uint) error {
+	sellingTeamID := player.TeamID
+	err := database.DB.Transaction(func(tx *gorm.DB) error {
+		// Reduce buyingTeam's AvailableCash
+		buyingTeam, err := GetTeamByID(strconv.FormatUint(uint64(buyingTeamID), 10))
+		if err != nil {
+			logger.Errorw("Failed to fetch buyingTeam", "error", err, "buyingTeamID", buyingTeamID)
+			return err
+		}
+		buyingTeam.AvailableCash -= transfer.AskedPrice
+		result := tx.Save(&buyingTeam)
+		if err := result.Error; err != nil {
+			logger.Errorw("Failed to update team's available cash", "error", err, "buying_team", buyingTeam)
+			return err
+		}
+
+		// Increase sellingTeam's AvailableCash
+		sellingTeam, err := GetTeamByID(strconv.FormatUint(uint64(sellingTeamID), 10))
+		if err != nil {
+			logger.Errorw("Failed to fetch sellingTeam", "error", err, "sellingTeamID", sellingTeamID)
+			return err
+		}
+		sellingTeam.AvailableCash += transfer.AskedPrice
+		result = tx.Save(&sellingTeam)
+		if err := result.Error; err != nil {
+			logger.Errorw("Failed to update team's available cash", "error", err, "selling_team", sellingTeam)
+			return err
+		}
+
+		// Remove from transfer list
+		transfer.Transferred = true
+		result = tx.Save(&transfer)
+		if err := result.Error; err != nil {
+			logger.Errorw("Failed to remove from transfer list", "error", err, "transfer", transfer)
+			return err
+		}
+
+		// Update player's team and value
+		player.Transfer(buyingTeamID)
+		result = tx.Save(&player)
+		if err := result.Error; err != nil {
+			logger.Errorw("Failed to update team and player value", "error", err, "player", player)
+			return err
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		logger.Errorw("Failed to transfer player", "error", err)
+		return err
+	}
+
+	return err
 }
 
 func GetTransferByPlayerID(playerID string) (model.Transfer, error) {
