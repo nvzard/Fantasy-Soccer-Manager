@@ -10,7 +10,7 @@ type Team struct {
 	ID            uint      `json:"id" gorm:"primarykey"`
 	Name          string    `json:"name"`
 	Country       string    `json:"country"`
-	AvailableCash int       `json:"available_cash" gorm:"default:5000000"`
+	AvailableCash int64     `json:"available_cash" gorm:"default:5000000"`
 	UserID        uint      `json:"user_id"`
 	Players       []Player  `json:"players"`
 	CreatedAt     time.Time `json:"-"`
@@ -29,8 +29,8 @@ func (team *Team) GenerateTeam() {
 	team.Players = GeneratePlayers(3, 6, 6, 5)
 }
 
-func (team *Team) CalculateTeamValue() int {
-	var teamValue int
+func (team *Team) CalculateTeamValue() int64 {
+	var teamValue int64
 	for _, player := range team.Players {
 		teamValue += player.MarketValue
 	}

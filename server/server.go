@@ -50,7 +50,7 @@ func SetupApiServer() *gin.Engine {
 		secured.PATCH("/player/:id", controller.UpdatePlayer)
 
 		secured.POST("/transfers/", controller.CreateTransfer)
-		// secured.POST("/transfers/buy/:player_id", controller.BuyPlayer)
+		secured.POST("/transfers/buy/:player_id", controller.BuyPlayer)
 		secured.GET("/transfers", controller.GetTransfers)
 	}
 

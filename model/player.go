@@ -14,8 +14,8 @@ type Player struct {
 	Country     string    `json:"country"`
 	Age         uint8     `json:"age"`
 	Position    string    `json:"position"`
-	MarketValue int       `json:"marketValue" gorm:"default:1000000"`
-	TeamID      uint      `json:"-"`
+	MarketValue int64     `json:"marketValue" gorm:"default:1000000"`
+	TeamID      uint      `json:"team_id"`
 	CreatedAt   time.Time `json:"-"`
 	UpdatedAt   time.Time `json:"-"`
 }
@@ -34,7 +34,7 @@ func (player *Player) GeneratePlayer(position string) {
 	player.Position = position
 }
 
-func (player *Player) TransferPlayer(teamID uint) {
+func (player *Player) Transfer(teamID uint) {
 	player.TeamID = teamID
 	player.increaseMarketValue()
 }
@@ -42,8 +42,10 @@ func (player *Player) TransferPlayer(teamID uint) {
 // Randomly increase player market value b/w 10 and 100 percent
 func (player *Player) increaseMarketValue() {
 	rand.Seed(time.Now().UnixNano())
-	increasePercentage := 10 + rand.Intn(100-10)
-	player.MarketValue += player.MarketValue * (increasePercentage / 100)
+	randomPercent := (10 + rand.Intn(90))
+	amountToIncrease := ((float64(player.MarketValue) * float64(randomPercent)) / float64(100))
+	increasedAmount := player.MarketValue + int64(amountToIncrease)
+	player.MarketValue = increasedAmount
 }
 
 func GeneratePlayers(goalkeeperCount, defendersCount, midfieldersCount, attackersCount int) []Player {
