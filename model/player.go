@@ -8,14 +8,14 @@ import (
 )
 
 type Player struct {
-	ID          uint      `json:"id" gorm:"primarykey"`
+	ID          uint      `json:"id" gorm:"primarykey,index"`
 	FirstName   string    `json:"first_name"`
 	LastName    string    `json:"last_name"`
 	Country     string    `json:"country"`
 	Age         uint8     `json:"age"`
 	Position    string    `json:"position"`
 	MarketValue int64     `json:"marketValue" gorm:"default:1000000"`
-	TeamID      uint      `json:"team_id"`
+	TeamID      uint      `json:"team_id" gorm:"index"`
 	CreatedAt   time.Time `json:"-"`
 	UpdatedAt   time.Time `json:"-"`
 }

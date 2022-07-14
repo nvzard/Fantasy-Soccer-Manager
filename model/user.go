@@ -9,10 +9,10 @@ import (
 )
 
 type User struct {
-	ID        uint   `json:"id" gorm:"primarykey"`
+	ID        uint   `json:"id" gorm:"primarykey,index"`
 	FirstName string `json:"first_name"`
 	LastName  string `json:"last_name"`
-	Email     string `json:"email" gorm:"unique"`
+	Email     string `json:"email" gorm:"uniqueIndex"`
 	Password  string `json:"password"`
 	TeamID    uint   `json:"team_id"`
 	Team      Team

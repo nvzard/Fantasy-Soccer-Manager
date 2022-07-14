@@ -7,7 +7,7 @@ import (
 )
 
 type Team struct {
-	ID            uint      `json:"id" gorm:"primarykey"`
+	ID            uint      `json:"id" gorm:"primarykey,index"`
 	Name          string    `json:"name"`
 	Country       string    `json:"country"`
 	AvailableCash int64     `json:"available_cash" gorm:"default:5000000"`

@@ -6,8 +6,8 @@ import (
 )
 
 type Transfer struct {
-	ID          uint      `json:"id" gorm:"primarykey"`
-	PlayerID    uint      `json:"player_id"`
+	ID          uint      `json:"id" gorm:"primarykey,index"`
+	PlayerID    uint      `json:"player_id" gorm:"index"`
 	MarketValue int64     `json:"market_value"`
 	AskedPrice  int64     `json:"asked_price"`
 	Transferred bool      `json:"-" gorm:"default:false"`
