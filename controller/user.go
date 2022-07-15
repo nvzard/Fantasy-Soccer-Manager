@@ -36,7 +36,7 @@ func RegisterUser(context *gin.Context) {
 		context.Abort()
 		return
 	}
-	context.JSON(http.StatusCreated, gin.H{"userID": newUser.ID, "email": newUser.Email})
+	context.JSON(http.StatusCreated, gin.H{"id": newUser.ID, "email": newUser.Email})
 }
 
 func GetUser(context *gin.Context) {

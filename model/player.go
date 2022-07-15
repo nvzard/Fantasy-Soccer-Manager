@@ -14,7 +14,7 @@ type Player struct {
 	Country     string    `json:"country"`
 	Age         uint8     `json:"age"`
 	Position    string    `json:"position"`
-	MarketValue int64     `json:"marketValue" gorm:"default:1000000"`
+	MarketValue int64     `json:"market_value" gorm:"default:1000000"`
 	TeamID      uint      `json:"team_id" gorm:"index"`
 	CreatedAt   time.Time `json:"-"`
 	UpdatedAt   time.Time `json:"-"`
