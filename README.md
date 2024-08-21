@@ -91,14 +91,10 @@ docker-sync (0.7.2) [Use `gem install docker-sync -v 0.7.2` for mac]
 1. Clone repository
 
 ```
-git clone https://git.toptal.com/screening/Nitanshu-Vashistha.git
-```
-or
-```
 git clone https://github.com/nvzard/soccer-manager.git
 ```
 
-2. Change directory to the cloned repository
+2. Change the directory to the cloned repository
 
 ```
 cd soccer-manager
